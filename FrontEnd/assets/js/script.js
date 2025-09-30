@@ -16,7 +16,10 @@ async function main() {
     toggleElementsBox(false)
 }
 
-// Display Works
+/**
+ * affiche tableau/array des travaux
+ * @param {Array} worksList 
+ */
 function displayWorksList(worksList) {
     const gallery = document.querySelector(".gallery")
 
