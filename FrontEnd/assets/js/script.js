@@ -319,6 +319,7 @@ function manageUploadBox() {
             alert("Le fichier dépasse la taille maximale de 4 Mo.")
             toggleElementsBox(false)
             photoInput.value = ""
+            return
         }
 
         reader.onload = (e) => {
