@@ -1,4 +1,6 @@
-//Initiate Page 
+/**
+ * Initiates page and main functions
+ */
 async function main() {
     const worksList = await getWorksList()
     const categories = await getCategoryItems()
@@ -17,8 +19,8 @@ async function main() {
 }
 
 /**
- * affiche tableau/array des travaux
- * @param {Array} worksList 
+ * Displays a worklist in the DOM on the Homepage
+ * @param {Array} worksList - Array of all the works to display
  */
 function displayWorksList(worksList) {
     const gallery = document.querySelector(".gallery")
@@ -30,10 +32,10 @@ function displayWorksList(worksList) {
 }
 
 /**
- * Créer une galerie 
- * @param {object} work 
- * @param {boolean} includeCaption 
- * @returns figure
+ * Creates worklist element as <figure>
+ * @param {object} work - single element of worklist
+ * @param {boolean} includeCaption - if it's on the Homepage, include caption
+ * @returns figure - HTML element containing <figure>, and the caption (= true)
  */
 function createGalleryFigure(work, includeCaption = true) {
     const figure = document.createElement("figure")
@@ -54,7 +56,10 @@ function createGalleryFigure(work, includeCaption = true) {
     return figure
 }
 
-// Filters
+/**
+ * Sets up the Filter Buttons on Homepage (DOM only)
+ * For each button apply filterGallery(categoryId) function params
+ */
 function setupFilterBtns() {
     const filterBtns = document.querySelectorAll(".filter-btn")
 
@@ -65,6 +70,10 @@ function setupFilterBtns() {
     })
 }
 
+/**
+ * Filters gallery to show only <figure> elements matching the selected category
+ * @param {string} categoryId - The ID of the category to filter by ("0" means show all)
+ */
 function filterGallery(categoryId) {
     let figures = document.querySelectorAll(".gallery figure")
 
@@ -77,7 +86,10 @@ function filterGallery(categoryId) {
     })
 }
 
-// User Authentification
+/**
+ * Checks if user is authenticated by looking for "token" in Local Storage
+ * @returns {boolean} true/false - true if token exists / false if it doesn't
+ */
 function isUserAuthenticated() {
     const isAuthenticated = localStorage.getItem("token")
 
@@ -88,6 +100,11 @@ function isUserAuthenticated() {
     return true
 }
 
+/**
+ * Manages the "Login" button text and behavior based on user authentication status
+ * Changes button text to "logout" if user is logged in, otherwise "login"
+ * Adds click event to either log out (clear storage and refresh) or redirect to login page
+ */
 function manageLogButton() {
     const logButton = document.getElementById("login-button")
     
@@ -99,17 +116,17 @@ function manageLogButton() {
     
     logButton.addEventListener("click", () => {
         if (isUserAuthenticated() == true) {
-            //on est en mode logout
             localStorage.clear()
             window.location.href = "index.html"
         } else {
-            //on est en mode login
             window.location.href = "login.html"
         }
     })
 }
 
-// Edit Mode
+/**
+ * Manages edit mode by applying changes when the user is logged in
+ */
 function manageEditMode() {
     const isAuth = isUserAuthenticated()
     toggleElementClasses(isAuth)
@@ -119,6 +136,11 @@ function manageEditMode() {
     manageFormContent()
 }
 
+/**
+ * Toggles CSS classes on Homepage based on user authentication status
+ * Shows or hides "Mode édition" banner, modify button, header margins and filter buttons accordingly
+ * @param {boolean} isAuthenticated - applying changes whether user is logged in or not
+ */
 function toggleElementClasses(isAuthenticated) {
     const editModeBanner = document.querySelector(".edit-mode")
     const modifyButton = document.querySelector(".modify-button")
@@ -126,13 +148,19 @@ function toggleElementClasses(isAuthenticated) {
     const sectionHeader = document.querySelector(".section-header")
     const filterBox = document.querySelector(".button-box")
 
-    editModeBanner.classList.toggle("hidden", !isAuthenticated)        // Affichage de la banière "Mode édition"
-    modifyButton.classList.toggle("hidden", !isAuthenticated)          // Affichage du bouton "Modifier"
-    pageHeader.classList.toggle("margin-header", isAuthenticated)      //Change Affichage de la Margin Header
-    sectionHeader.classList.toggle("section-header", isAuthenticated)  //Change Affichage de Section Header "Mes projets"
-    filterBox.classList.toggle("hidden", isAuthenticated)              // Affichage des boutons Filtres
+    editModeBanner.classList.toggle("hidden", !isAuthenticated)
+    modifyButton.classList.toggle("hidden", !isAuthenticated)
+    pageHeader.classList.toggle("margin-header", isAuthenticated)
+    sectionHeader.classList.toggle("section-header", isAuthenticated)
+    filterBox.classList.toggle("hidden", isAuthenticated)
 }
 
+/**
+ * Sets up the edit button to listen for clicks
+ * When modifyButton is clicked, shows overlay and disables scrolling
+ * When overlay is clicked (outside popup), closes popup window
+ * When closeButton is clicked, also closes popup window
+ */
 function setupEditButton() {
     const modifyButton = document.querySelector(".modify-button")
     const overlay = document.querySelector(".overlay")
@@ -145,7 +173,7 @@ function setupEditButton() {
 
     overlay.addEventListener("click", (event) => {
         if (event.target === overlay) {
-            closeOverlay(overlay) // ferme overlay sans cliquer sur la croix
+            closeOverlay(overlay)
         }
     })
 
@@ -154,6 +182,11 @@ function setupEditButton() {
     })
 }
 
+/**
+ * Closes overlay popup and resets related states
+ * Hides overlay, re-enables scrolling, resets popup mode and form content
+ * @param {HTMLElement} overlay - overlay element to hide
+ */
 function closeOverlay(overlay) {
     overlay.style.display = "none"
     document.body.style.overflow = ""
@@ -161,11 +194,16 @@ function closeOverlay(overlay) {
     resetForm()
 }
 
+/**
+ * Displays editable gallery in popup window
+ * Creates figure for each work (without caption) and adds delete button
+ * @param {Array} worklist - Array of works to display in edit mode
+ */
 function displayEditingGallery(worklist) {
     const editGallery = document.querySelector(".edit-gallery")
 
     worklist.forEach(work => {
-        const figure = createGalleryFigure(work, false) // Pas de FigCaption
+        const figure = createGalleryFigure(work, false)
         const deleteBtn = manageDeleteButton(work, figure)
         
         figure.appendChild(deleteBtn)
@@ -173,6 +211,13 @@ function displayEditingGallery(worklist) {
     });
 }
 
+/**
+ * Creates deleteBtn for each work and handles delete behaviour
+ * Sends delete request to api when clicked, and removes figure from both Homepage and Edit Gallery popup
+ * @param {object} work - work item to delete (with ID and title)
+ * @param {HTMLElement} figure - element to remove from edit gallery
+ * @returns {HTMLButtonElement} deleteBtn - delete button element, to use for other functions
+ */
 function manageDeleteButton(work, figure) {
     const deleteBtn = document.createElement("button")
     deleteBtn.classList.add("delete-btn")
@@ -194,8 +239,11 @@ function manageDeleteButton(work, figure) {
     return deleteBtn
 }
 
-// Add Photo popup
-
+/**
+ * Manages addPhotoBtn button and goBackBtn button in popup
+ * Switches to upload photo form when addPhotoBtn is clicked
+ * Returns to edit gallery and resets form goBackBtn is clicked
+ */
 function manageAddPhotoBtn() {
     const addPhotoBtn = document.getElementById("popup-btn")
     const goBackBtn = document.querySelector(".go-back")
@@ -210,6 +258,11 @@ function manageAddPhotoBtn() {
     })
 }
 
+/**
+ * Switches between Edit Gallery view and Add Photo view in popup
+ * Calls functions to update icons, title, buttons, and gallery content
+ * @param {boolean} isAddPhotoMode - true to show Add Photo form, false to show Edit Gallery
+ */
 function switchPopupMode(isAddPhotoMode) {
     managePopupIcons(isAddPhotoMode)
     manageEditGallery(isAddPhotoMode)
@@ -217,6 +270,10 @@ function switchPopupMode(isAddPhotoMode) {
     managePopupBtn(isAddPhotoMode)
 }
 
+/**
+ * Updates popup icon layout and goBackBtn visibility based on current popup mode
+ * @param {boolean} isAddPhotoMode - true for Add Photo mode, false for Edit Gallery mode
+ */
 function managePopupIcons(isAddPhotoMode) {
     const popupIcons = document.querySelector(".popup-icons")
     const goBackBtn = document.querySelector(".go-back")
@@ -230,6 +287,10 @@ function managePopupIcons(isAddPhotoMode) {
     }
 }
 
+/**
+ * Toggles visibility between Edit Gallery view and Add Photo form in popup
+ * @param {boolean} isAddPhotoMode - true to show Add Photo form, false to show Edit Gallery
+ */
 function manageEditGallery(isAddPhotoMode) {
     const editGallery = document.querySelector(".edit-gallery")
     const addPhotoMode = document.querySelector(".add-photo-mode")
@@ -243,6 +304,10 @@ function manageEditGallery(isAddPhotoMode) {
     }
 }
 
+/**
+ * Updates popup title based on current mode
+ * @param {boolean} isAddPhotoMode - true to show "Ajout Photo" title, false to show "Galerie photo"
+ */
 function managePopupTitle(isAddPhotoMode) {
     const popupTitle = document.getElementById("popup-title")
 
@@ -253,6 +318,10 @@ function managePopupTitle(isAddPhotoMode) {
     }
 }
 
+/**
+ * Moves popup elements and triggers appropriate button setup based on current popup mode
+ * @param {boolean} isAddPhotoMode - true for Add Photo mode, false for Edit Gallery mode
+ */
 function managePopupBtn(isAddPhotoMode) {
     const popupBox = document.querySelector(".popup-box")
     const form = document.querySelector(".add-photo-mode")
@@ -270,6 +339,9 @@ function managePopupBtn(isAddPhotoMode) {
     }
 }
 
+/**
+ * Sets popup button to visual pending validation state with CSS
+ */
 function validateBtnPending() {
     const validateBtn = document.getElementById("popup-btn")
     validateBtn.classList.remove("add-button")
@@ -278,6 +350,9 @@ function validateBtnPending() {
     validateBtn.innerHTML = "Valider"
 }
 
+/**
+ * Sets popup button to "Add Photo" state, removing CSS "validate" and "pending" states
+ */
 function addPhotoBtn() {
     const addPhotoBtn = document.getElementById("popup-btn")
     addPhotoBtn.classList.add("add-button")
@@ -287,6 +362,10 @@ function addPhotoBtn() {
     addPhotoBtn.innerHTML = "Ajouter une photo"
 }
 
+/**
+ * Toggles visibility of upload box elements based on photo and upload status
+ * @param {boolean} isPhotoUploaded - true if a photo is uploaded, false otherwise
+ */
 function toggleElementsBox(isPhotoUploaded) {
     const icon = document.querySelector(".fa-image")
     const addPhotoTxt = document.getElementById("add-photo-txt")
@@ -306,6 +385,12 @@ function toggleElementsBox(isPhotoUploaded) {
     }
 }
 
+/**
+ * Handles photo upload input:
+ * - Shows preview of uploaded image
+ * - Checks file size (max 4MB) and alerts if exceeded
+ * - Toggles upload elements visibility accordingly
+ */
 function manageUploadBox() {
     const photoInput = document.getElementById("photo-input")
     const preview = document.getElementById("preview")
@@ -331,12 +416,19 @@ function manageUploadBox() {
     })
 }
 
+/**
+ * Resets form if popup mode is not in "Add Photo" mode (e.g., when you go back or close popup)
+ */
 function manageFormContent() {
     if(switchPopupMode(false)) {
         resetForm()
     }
 }
 
+/**
+ * Fills category <select> element with options from the categories list in api
+ * @param {Array} categories - Array of category objects with id and name
+ */
 async function selectCategoryItem(categories) {
     const select = document.getElementById("photo-category")
 
@@ -348,6 +440,11 @@ async function selectCategoryItem(categories) {
     })
 }
 
+/**
+ * Resets the photo upload form:
+ * - Clears all input fields and preview area / (1) & (2)
+ * - Resets submit button state and visibility of related elements / (3)
+ */
 function resetForm() {
     const fileInput = document.getElementById("photo-input")
     const titleInput = document.getElementById("photo-title")
@@ -355,22 +452,25 @@ function resetForm() {
     const preview = document.getElementById("preview")
     const submitBtn = document.getElementById("popup-btn")
 
-    // Vide tous les champs
+    // (1)
     fileInput.value = ""
     titleInput.value = ""
     categorySelect.value = ""
 
-    // Vide l'aperçu
+    // (2)
     preview.innerHTML = ""
 
-    // Réinitialise le bouton
+    // (3)
     submitBtn.classList.remove("validate-btn")
     submitBtn.classList.remove("validate-btn-pending")
     submitBtn.disabled = false
     toggleElementsBox(false)
 }
 
-
+/**
+ * Validates form inputs and updates submit button state
+ * Enables button if all inputs are filled, disables it otherwise
+ */
 function validateFormBtn() {
     const fileInput = document.getElementById("photo-input")
     const titleInput = document.getElementById("photo-title")
@@ -394,6 +494,13 @@ function validateFormBtn() {
     }
 }
 
+/**
+ * Handles form submission for uploading a photo
+ * Validates inputs on change/input events
+ * On submit, prevents default and sends photo data to API
+ * If successful, updates both Edit gallery and Homepage and resets form
+ * Shows alerts on success or failure
+ */
 function submitForm() {
     const fileInput = document.getElementById("photo-input")
     const titleInput = document.getElementById("photo-title")

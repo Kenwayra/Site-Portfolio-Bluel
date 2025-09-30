@@ -1,4 +1,6 @@
-// Iniate Login, Form
+/**
+ * Initialise login form to validate inputs and handle submission
+ */
 function initLoginPage() {
     const registrationForm = document.getElementById("register-form")
 
@@ -21,6 +23,11 @@ function initLoginPage() {
     })
 }
 
+/**
+ * Sends login request to api and handles response, saving token on success or showing error message on failure
+ * @param {string} email - user's email
+ * @param {string} password - user's password
+ */
 async function doLogin(email, password) {
     try {
         let response = await doLoginRequest(email, password)
@@ -38,8 +45,11 @@ async function doLogin(email, password) {
     }
 }
 
-
-// Validate Data
+/**
+ * Validates email string with regex pattern
+ * @param {string} email - user's email
+ * @returns {boolean} true if email format is valid, false otherwise
+ */
 function isEmailValid(email) {
     let emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-z]{2,4}$/;
     if (emailRegex.test(email)) {
@@ -48,6 +58,11 @@ function isEmailValid(email) {
     return false;
 }
 
+/**
+ * Validates password string with regex pattern
+ * @param {string} password - user's password
+ * @returns true if password format is valid, false otherwise
+ */
 function isPasswordValid(password) {
     let passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{5,}$/;
     if (passwordRegex.test(password)) {
@@ -56,6 +71,12 @@ function isPasswordValid(password) {
     return false;
 }
 
+/**
+ * Displays or hides error message based on valid email or not
+ * @param {string} email - user's email
+ * @param {HTMLElement} emailField - input field element for email
+ * @returns {boolean} true if email is valid, false otherwise
+ */
 function validateEmail(email, emailField) {
     if (!isEmailValid(email)) {
         displayErrorBorder(emailField)
@@ -68,6 +89,12 @@ function validateEmail(email, emailField) {
     }
 }
 
+/**
+ * Displays or hides error message based on valid password or not
+ * @param {string} password - user's password
+ * @param {HTMLElement} passwordField - input field element for password
+ * @returns {boolean} true if password is valid, false otherwise
+ */
 function validatePassword(password, passwordField) {
     if (!isPasswordValid(password)) {
         displayErrorBorder(passwordField)
@@ -81,7 +108,10 @@ function validatePassword(password, passwordField) {
 }
 
 
-//Display Elements
+/**
+ * Displays password when toggle button is clicked
+ * @param {HTMLElement} passwordField - input field element for password
+ */
 function displayPassword(passwordField) {
     const toggleButton = document.getElementById("toggle-button");
 
@@ -98,10 +128,15 @@ function displayPassword(passwordField) {
     });
 }
 
+/**
+ * Displays error message if login failed
+ * @param {string} message - api response as a text content
+ */
 function displayLoginErrorMessage(message) {
     const loginError = document.getElementById("login-error")
     loginError.textContent = message
 }
+
 
 function displayErrorMessage(idWrongField, message) {
     const wrongField = document.querySelector(idWrongField)
