@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="loginPage" lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Connexion - Sophie Bluel</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
+	<meta name="description" content="">
+	<link rel="stylesheet" href="./assets/style.css">
+	<script defer src="./assets/js/api.js"></script>
+	<script defer src="./assets/js/login_script.js"></script>
+</head>
+<body class="loginPage">
+    <header>
+	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+	<nav>
+		<ul>
+			<li>projets</li>
+			<li>contact</li>
+			<li id="login-button" class="login-button-clicked">login</li>
+			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+		</ul>
+	</nav>
+</header>
+<main class="loginPage">
+    <section id="login">
+		<h2>Log In</h2>
+		<form id="register-form" method="post">
+			<label for="email">E-mail</label>
+			<input type="email" name="email" id="email">
+			<p id="email-wrong" class="wrong-input"></p>
+            <label for="name">Mot de passe</label>
+			<input type="password" name="password" id="password">
+			<p id="password-wrong" class="wrong-input"></p>
+			<p id="login-error" class="wrong-input"></p>
+			<input type="submit" value="Se connecter">
+            <a class="mdp" href="#">Mot de passe oublié</a>
+		</form>
+		<button id="toggle-button"><i class="fa-solid fa-eye"></i></button>
+	</section>
+</main>
+
+<footer class="loginPage">
+	<nav>
+		<ul>
+			<li>Mentions Légales</li>
+		</ul>
+	</nav>
+</footer>
+</body>
+</html>
