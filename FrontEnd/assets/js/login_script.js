@@ -137,22 +137,39 @@ function displayLoginErrorMessage(message) {
     loginError.textContent = message
 }
 
-
+/**
+ * Displays error message if password or email is invalid
+ * @param {HTMLElement} idWrongField - selects field under "password" or "email"
+ * @param {string} message - displays personalised error message typed
+ */
 function displayErrorMessage(idWrongField, message) {
     const wrongField = document.querySelector(idWrongField)
     wrongField.textContent = message
 }
 
+/**
+ * Removes displayed error message
+ * @param {HTMLElement} idWrongField - selects field under "password" or "email"
+ * @param {string} message - removes personalised error message typed 
+ */
 function removeErrorMessage(idWrongField, message) {
     const wrongField = document.querySelector(idWrongField)
     wrongField.textContent = message
     message = ""
 }
 
+/**
+ * Displays visual indication of error with CSS class
+ * @param {HTMLElement} input - input inside login form containing invalid content
+ */
 function displayErrorBorder(input) {
     input.classList.add("error-border")
 }
 
+/**
+ * Removes CSS class displaying visual indication of error
+ * @param {HTMLElement} input - input inside login form containing now valid content 
+ */
 function removeErrorBorder(input) {
     input.classList.remove("error-border")
 }

@@ -35,7 +35,7 @@ function displayWorksList(worksList) {
  * Creates worklist element as <figure>
  * @param {object} work - single element of worklist
  * @param {boolean} includeCaption - if it's on the Homepage, include caption
- * @returns figure - HTML element containing <figure>, and the caption (= true)
+ * @returns {object} figure - HTML element containing <figure>, and the caption (= true)
  */
 function createGalleryFigure(work, includeCaption = true) {
     const figure = document.createElement("figure")
@@ -71,8 +71,8 @@ function setupFilterBtns() {
 }
 
 /**
- * Filters gallery to show only <figure> elements matching the selected category
- * @param {string} categoryId - The ID of the category to filter by ("0" means show all)
+ * Filters gallery to show only <figure> elements matching selected category
+ * @param {string} categoryId - ID of said category to filter by ("0" means show all)
  */
 function filterGallery(categoryId) {
     let figures = document.querySelectorAll(".gallery figure")
@@ -101,7 +101,7 @@ function isUserAuthenticated() {
 }
 
 /**
- * Manages the "Login" button text and behavior based on user authentication status
+ * Manages "Login" button text and behaviour based on user authentication status
  * Changes button text to "logout" if user is logged in, otherwise "login"
  * Adds click event to either log out (clear storage and refresh) or redirect to login page
  */
@@ -426,7 +426,7 @@ function manageFormContent() {
 }
 
 /**
- * Fills category <select> element with options from the categories list in api
+ * Displays categories fetched from API on <select> for user to bind to said category 
  * @param {Array} categories - Array of category objects with id and name
  */
 async function selectCategoryItem(categories) {
